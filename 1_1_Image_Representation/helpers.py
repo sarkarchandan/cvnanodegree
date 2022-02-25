@@ -2,6 +2,7 @@
 
 import os
 import glob # library for loading images from a directory
+import numpy as np
 import matplotlib.image as mpimg
 
 import cv2
@@ -46,25 +47,26 @@ def load_dataset(image_dir):
 
 # This function should take in an RGB image and return a new, standardized version
 # 600 height x 1100 width image size (px x px)
-def standardize_input(image):
-    
-    # Resize image and pre-process so that all "standard" images are the same size
-    standard_im = cv2.resize(image, (1100, 600))
-    
+# This function should take in an RGB image and return a new, standardized version
+def standardize_input(image: np.ndarray) -> np.ndarray:
+    ## TODO: Resize image so that all "standard" images are the same size 600x1100 (hxw) 
+    y_direction_height: int = 600
+    x_direction_width: int = 1100
+    standard_im = cv2.resize(image, dsize=(x_direction_width, y_direction_height), interpolation=cv2.INTER_LINEAR)
     return standard_im
 
 
-# Examples:
+# Examples: 
 # encode("day") should return: 1
 # encode("night") should return: 0
-def encode(label):
-    
-    numerical_val = 0
-    if(label == 'day'):
+
+def encode(label: str) -> int:
+    ## TODO: complete the code to produce a numerical label
+    numerical_val: int = 0
+    if label == 'day':
         numerical_val = 1
-    # else it is night and can stay 0
-    
     return numerical_val
+    
 
 # using both functions above, standardize the input images and output labels
 def standardize(image_list):
