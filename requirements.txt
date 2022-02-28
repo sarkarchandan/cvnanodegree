@@ -64,8 +64,8 @@ pyparsing==3.0.7
 pyrsistent==0.18.1
 python-dateutil==2.8.2
 pytz==2021.3
-pywin32==303
-pywinpty==2.0.2
+pywin32==303; platform_system == 'Windows'
+pywinpty==2.0.2; platform_system == 'Windows'
 PyYAML==6.0
 pyzmq==22.3.0
 qtconsole==5.2.2
@@ -77,9 +77,9 @@ stack-data==0.2.0
 terminado==0.13.1
 testpath==0.5.0
 tomli==2.0.1
-torch==1.10.2+cu113
-torchaudio==0.10.2+cu113
-torchvision==0.11.3+cu113
+torch==1.10.2+cu113; platform_system == 'Windows'
+torchaudio==0.10.2+cu113; platform_system == 'Windows'
+torchvision==0.11.3+cu113; platform_system == 'Windows'
 tornado==6.1
 traitlets==5.1.1
 typing_extensions==4.1.1
