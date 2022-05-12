@@ -89,9 +89,9 @@ class robot:
         ##    as list.append([index, dx, dy]), this format is important for data creation done later
         for lix, lnm in enumerate(self.landmarks):
             # Compute the x and y distances from the landmark
-            dx: float = abs(lnm[0] - self.x) + (self.rand() * self.measurement_noise)
-            dy: float = abs(lnm[1] - self.y) + (self.rand() * self.measurement_noise)
-            if dx <= self.measurement_range and dy <= self.measurement_range:
+            dx: float = (lnm[0] - self.x) + (self.rand() * self.measurement_noise)
+            dy: float = (lnm[1] - self.y) + (self.rand() * self.measurement_noise)
+            if self.measurement_range == -1 or dx <= abs(self.measurement_range) and dy <= abs(self.measurement_range):
                 measurements.append((lix, dx, dy))
         return measurements
 
