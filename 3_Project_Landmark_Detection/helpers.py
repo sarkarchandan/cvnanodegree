@@ -1,8 +1,10 @@
+from typing import List, Tuple
 from robot_class import robot
 from math import *
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
 import seaborn as sns
 
 
@@ -10,18 +12,18 @@ import seaborn as sns
 # this helper function displays the world that a robot is in
 # it assumes the world is a square grid of some given size
 # and that landmarks is a list of landmark positions(an optional argument)
-def display_world(world_size, position, landmarks=None):
+def display_world(world_size: int, position: List[float], landmarks: List[Tuple[int, float, float]]=None):
     
     # using seaborn, set background grid to gray
     sns.set_style("dark")
 
     # Plot grid of values
-    world_grid = np.zeros((world_size+1, world_size+1))
+    world_grid: np.ndarray = np.zeros((world_size+1, world_size+1))
 
     # Set minor axes in between the labels
-    ax=plt.gca()
-    cols = world_size+1
-    rows = world_size+1
+    ax: Axes = plt.gca()
+    cols: int = world_size+1
+    rows: int = world_size+1
 
     ax.set_xticks([x for x in range(1,cols)],minor=True )
     ax.set_yticks([y for y in range(1,rows)],minor=True)
@@ -52,8 +54,8 @@ def display_world(world_size, position, landmarks=None):
 # the data is a list of measurements and movements: [measurements, [dx, dy]]
 # collected over a specified number of time steps, N
 #
-def make_data(N, num_landmarks, world_size, measurement_range, motion_noise, 
-              measurement_noise, distance):
+def make_data(N: int, num_landmarks: int, world_size: float, measurement_range: float, motion_noise: float, 
+              measurement_noise: float, distance: float):
 
     # check that data has been made
     try:
@@ -62,26 +64,28 @@ def make_data(N, num_landmarks, world_size, measurement_range, motion_noise,
         print('Error: You must implement the sense function in robot_class.py.')
         return []
     
-    complete = False
+    complete: bool = False
     
-    r = robot(world_size, measurement_range, motion_noise, measurement_noise)
+    r: robot = robot(world_size, measurement_range, motion_noise, measurement_noise)
     r.make_landmarks(num_landmarks)
 
     while not complete:
-
+        # Probelmatic type, hard to typeset. Go for a 
+        # better data structure for real implementation
         data = []
 
-        seen = [False for row in range(num_landmarks)]
+        seen: List[bool] = [False for row in range(num_landmarks)]
     
         # guess an initial motion
-        orientation = random.random() * 2.0 * pi
-        dx = cos(orientation) * distance
-        dy = sin(orientation) * distance
-            
+        orientation: float = random.random() * 2.0 * pi
+        dx: float = cos(orientation) * distance
+        dy: float = sin(orientation) * distance
+        # Following iteration condition means, that the initial timestep is 
+        # included in the total number of time steps N
         for k in range(N-1):
     
             # collect sensor measurements in a list, Z
-            Z = r.sense()
+            Z: List[Tuple[int, float, float]] = r.sense()
 
             # check off all landmarks that were observed 
             for i in range(len(Z)):
@@ -90,9 +94,9 @@ def make_data(N, num_landmarks, world_size, measurement_range, motion_noise,
             # move
             while not r.move(dx, dy):
                 # if we'd be leaving the robot world, pick instead a new direction
-                orientation = random.random() * 2.0 * pi
-                dx = cos(orientation) * distance
-                dy = sin(orientation) * distance
+                orientation: float = random.random() * 2.0 * pi
+                dx: float = cos(orientation) * distance
+                dy: float = sin(orientation) * distance
 
             # collect/memorize all sensor and motion data
             data.append([Z, [dx, dy]])
@@ -104,17 +108,16 @@ def make_data(N, num_landmarks, world_size, measurement_range, motion_noise,
     print('Landmarks: ', r.landmarks)
     print(r)
 
-
     return data
 
 
-def check_for_data(num_landmarks, world_size, measurement_range, motion_noise, measurement_noise):
+def check_for_data(num_landmarks: int, world_size: float, measurement_range: float, motion_noise: float, measurement_noise: float) -> None:
     # make robot and landmarks
-    r = robot(world_size, measurement_range, motion_noise, measurement_noise)
+    r: robot = robot(world_size, measurement_range, motion_noise, measurement_noise)
     r.make_landmarks(num_landmarks)
     
     
     # check that sense has been implemented/data has been made
-    test_Z = r.sense()
+    test_Z: List[Tuple[int, float, float]] = r.sense()
     if(test_Z is None):
         raise ValueError
